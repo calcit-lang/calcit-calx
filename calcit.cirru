@@ -88,7 +88,7 @@
                       |T $ {} (:at 1658130647939) (:by |u0) (:text |run-vm) (:type :leaf)
                       |j $ {} (:at 1658135469379) (:by |u0) (:type :expr)
                         :data $ {}
-                          |D $ {} (:at 1658135471851) (:by |u0) (:text |quote) (:type :leaf)
+                          |D $ {} (:at 1658162589498) (:by |u0) (:text |cirru-quote) (:type :leaf)
                           |T $ {} (:at 1658130657997) (:by |u0) (:type :expr)
                             :data $ {}
                               |T $ {} (:at 1658130655824) (:by |u0) (:type :expr)
@@ -100,7 +100,7 @@
                                   |h $ {} (:at 1658134983788) (:by |u0) (:type :expr)
                                     :data $ {}
                                       |T $ {} (:at 1658134988714) (:by |u0) (:text |const) (:type :leaf)
-                                      |b $ {} (:at 1658134990753) (:by |u0) (:text "|\"demo") (:type :leaf)
+                                      |b $ {} (:at 1658163409536) (:by |u0) (:text ||demo) (:type :leaf)
                                   |l $ {} (:at 1658134991676) (:by |u0) (:type :expr)
                                     :data $ {}
                                       |T $ {} (:at 1658134992385) (:by |u0) (:text |echo) (:type :leaf)

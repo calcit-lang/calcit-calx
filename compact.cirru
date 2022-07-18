@@ -22,8 +22,8 @@
         |run-tests $ quote
           defn run-tests () (println "\"%%%% test for lib") (println calcit-filename calcit-dirname)
             println $ run-vm
-              quote $ 
-                fn main () (const "\"demo") (echo)
+              cirru-quote $ 
+                fn main () (const |demo) (echo)
       :ns $ quote
         ns calx.test $ :require
           calx.core :refer $ run-vm
