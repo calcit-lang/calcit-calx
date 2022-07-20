@@ -1,11 +1,11 @@
 [package]
-name = "calcit_std"
+name = "calcit_calx"
 version = "0.0.1"
 authors = ["jiyinyiyong <jiyinyiyong@gmail.com>"]
 edition = "2021"
 
 [lib]
-name = "calcit_std"
+name = "calcit_calx"
 path = "src/lib.rs"
 crate-type = ["dylib"] # Creates dynamic lib
 
@@ -15,3 +15,4 @@ crate-type = ["dylib"] # Creates dynamic lib
 [dependencies]
 cirru_edn = "0.2.20"
 cirru_parser = "0.1.23"
+calx_vm = "0.1.3"

@@ -1,35 +1,34 @@
 
-{} (:package |lib)
-  :configs $ {} (:init-fn |lib.test/main!) (:reload-fn |lib.test/reload!)
+{} (:package |calx)
+  :configs $ {} (:init-fn |calx.test/main!) (:reload-fn |calx.test/reload!) (:version |0.0.1)
     :modules $ []
-    :version |0.0.1
+  :entries $ {}
   :files $ {}
-    |lib.core $ {}
-      :ns $ quote
-        ns lib.core $ :require
-          lib.$meta :refer $ calcit-dirname
-          lib.util :refer $ get-dylib-path
+    |calx.core $ {}
       :defs $ {}
-        |path-exists? $ quote
-          defn path-exists? (name)
-            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"path_exists" name
-    |lib.test $ {}
+        |run-vm $ quote
+          defn run-vm (name)
+            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_calx") "\"run_vm" name
       :ns $ quote
-        ns lib.test $ :require
-          lib.core :refer $ path-exists?
-          lib.$meta :refer $ calcit-dirname calcit-filename
+        ns calx.core $ :require
+          calx.$meta :refer $ calcit-dirname
+          calx.util :refer $ get-dylib-path
+    |calx.test $ {}
       :defs $ {}
-        |run-tests $ quote
-          defn run-tests () (println "\"%%%% test for lib") (println calcit-filename calcit-dirname)
-            println (path-exists? "\"README.md") (path-exists? "\"build.js")
         |main! $ quote
           defn main! () $ run-tests
         |reload! $ quote
           defn reload! $
-    |lib.util $ {}
+        |run-tests $ quote
+          defn run-tests () (println "\"%%%% test for lib") (println calcit-filename calcit-dirname)
+            println $ run-vm
+              cirru-quote $ 
+                fn main () (const |demo) (echo)
       :ns $ quote
-        ns lib.util $ :require
-          lib.$meta :refer $ calcit-dirname calcit-filename
+        ns calx.test $ :require
+          calx.core :refer $ run-vm
+          calx.$meta :refer $ calcit-dirname calcit-filename
+    |calx.util $ {}
       :defs $ {}
         |get-dylib-ext $ quote
           defmacro get-dylib-ext () $ case-default (&get-os) "\".so" (:macos "\".dylib") (:windows "\".dll")
@@ -39,3 +38,6 @@
         |or-current-path $ quote
           defn or-current-path (p)
             if (blank? p) "\"." p
+      :ns $ quote
+        ns calx.util $ :require
+          calx.$meta :refer $ calcit-dirname calcit-filename

@@ -1,16 +1,17 @@
-## Workflow
+## Calcit Calx
 
-> Rust library for Calcit runtime.
-
-API 设计: https://github.com/calcit-lang/calcit_runner.rs/discussions/116 .
-
-### Usages
-
-APIs:
+> Calcit binding for [Calx VM](https://github.com/calcit-lang/calx-vm).
 
 ```cirru
-lib.core/path-exists? a
+ns app.main
+  :require
+    calx-vm :refer $ run-vm
+
+run-vm $ quote $
+  fn main () (const |demo) (echo)
 ```
+
+### Usages
 
 Install to `~/.config/calcit/modules/`, compile and provide `*.{dylib,so}` file with `./build.sh`.
 
