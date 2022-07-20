@@ -7,8 +7,8 @@
     |calx.core $ {}
       :defs $ {}
         |run-vm $ quote
-          defn run-vm (name)
-            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_calx") "\"run_vm" name
+          defn run-vm (code args)
+            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_calx") "\"run_vm" code args
       :ns $ quote
         ns calx.core $ :require
           calx.$meta :refer $ calcit-dirname
@@ -24,6 +24,19 @@
             println $ run-vm
               cirru-quote $ 
                 fn main () (const |demo) (echo)
+              []
+            println $ run-vm
+              cirru-quote $ 
+                fn main
+                    $a f64
+                    $b f64
+                    , -> f64
+                  local.get $a
+                  echo
+                  local.get $b
+                  echo
+                  const 3.
+              [] 1 2
       :ns $ quote
         ns calx.test $ :require
           calx.core :refer $ run-vm
