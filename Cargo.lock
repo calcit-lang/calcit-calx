@@ -63,9 +63,9 @@ dependencies = [
 
 [[package]]
 name = "calx_vm"
-version = "0.1.3"
+version = "0.1.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "db8b3525eca1d9b005bb4cbaff79701cc3c30338c214a3ae037b654d7c994741"
+checksum = "b0e647a7df05a46bed1047841ffbe9592cd6460f1aaefff512c5625bca9c407d"
 dependencies = [
  "bincode",
  "cirru_parser",
