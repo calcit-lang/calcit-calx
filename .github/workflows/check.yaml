@@ -21,15 +21,15 @@ jobs:
 
       - uses: supplypike/setup-bin@v3
         with:
-          uri: 'https://github.com/calcit-lang/calcit/releases/download/0.8.14/cr'
+          uri: 'https://github.com/calcit-lang/calcit/releases/download/0.13.27/cr'
           name: 'cr'
-          version: '0.8.14'
+          version: '0.13.27'
 
       - uses: supplypike/setup-bin@v3
         with:
-          uri: 'https://github.com/calcit-lang/calcit/releases/download/0.8.14/caps'
+          uri: 'https://github.com/calcit-lang/calcit/releases/download/0.13.27/caps'
           name: 'caps'
-          version: '0.8.14'
+          version: '0.13.27'
 
       - uses: dtolnay/rust-toolchain@stable
         with:
@@ -40,4 +40,4 @@ jobs:
 
       - run: mkdir -p dylibs/ && ls target/release/ && cp -v target/release/*.* dylibs/
 
-      - run: cr -1
+      - run: cr compact.cirru --check-only
