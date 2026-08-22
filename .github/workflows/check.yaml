@@ -19,17 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: supplypike/setup-bin@v3
-        with:
-          uri: 'https://github.com/calcit-lang/calcit/releases/download/0.13.27/cr'
-          name: 'cr'
-          version: '0.13.27'
-
-      - uses: supplypike/setup-bin@v3
-        with:
-          uri: 'https://github.com/calcit-lang/calcit/releases/download/0.13.27/caps'
-          name: 'caps'
-          version: '0.13.27'
+      - uses: calcit-lang/setup-calcit@v1
 
       - uses: dtolnay/rust-toolchain@stable
         with:
@@ -40,4 +30,4 @@ jobs:
 
       - run: mkdir -p dylibs/ && ls target/release/ && cp -v target/release/*.* dylibs/
 
-      - run: cr compact.cirru --check-only
+      - run: calcit calcit.cirru --check-only
