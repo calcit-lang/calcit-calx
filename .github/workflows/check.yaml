@@ -19,9 +19,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: calcit-lang/setup-calcit@v1
+      - uses: calcit-lang/setup-calcit@v1.3.0
         with:
-          version: "0.13.29"
+          version: "0.13.53"
           tools: calcit,caps
 
       - uses: dtolnay/rust-toolchain@stable
@@ -29,8 +29,14 @@ jobs:
           toolchain: stable
           components: clippy
 
+      - run: cargo test
+
+      - run: cargo clippy --all-targets -- -D warnings
+
       - run: cargo build --release
 
-      - run: mkdir -p dylibs/ && ls target/release/ && cp -v target/release/*.* dylibs/
+      - run: mkdir -p dylibs/
 
-      - run: calcit calcit.cirru --check-only
+      - run: cp target/release/libcalcit_calx.so dylibs/
+
+      - run: calcit --trace-ffi calcit.cirru
