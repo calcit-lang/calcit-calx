@@ -1,6 +1,6 @@
 [package]
 name = "calcit_calx"
-version = "0.0.2"
+version = "0.0.3"
 authors = ["jiyinyiyong <jiyinyiyong@gmail.com>"]
 edition = "2021"
 
