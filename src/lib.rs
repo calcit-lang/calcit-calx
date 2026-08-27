@@ -4,13 +4,11 @@ use std::{collections::HashMap, vec};
 
 use calx_vm::{parse_function, Calx, CalxError, CalxFunc, CalxImportsDict, CalxVM};
 
-#[no_mangle]
-pub fn abi_version() -> String {
-  String::from("0.0.6")
-}
+mod ffi;
 
-#[no_mangle]
-pub fn run_vm(args: Vec<Edn>) -> Result<Edn, String> {
+use ffi::CalcitFfiBuffer;
+
+fn run_vm(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 2 {
     if let Edn::Quote(Cirru::List(xs)) = &args[0] {
       let mut fns: Vec<CalxFunc> = vec![];
@@ -21,7 +19,7 @@ pub fn run_vm(args: Vec<Edn>) -> Result<Edn, String> {
           let f = parse_function(ys)?;
           fns.push(f);
         } else {
-          panic!("expected top level expressions");
+          return Err("run-vm expected top-level expressions".to_owned());
         }
       }
       let mut imports: CalxImportsDict = HashMap::new();
@@ -45,8 +43,8 @@ pub fn run_vm(args: Vec<Edn>) -> Result<Edn, String> {
       match vm.run(params) {
         Ok(value) => Ok(calx_to_edn(value)?),
         Err(e) => {
-          println!("VM state: {:?}", vm.stack);
-          println!("{}", e);
+          eprintln!("VM state: {:?}", vm.stack);
+          eprintln!("{}", e);
           Err(format!("failed running: {}", e))
         }
       }
@@ -58,6 +56,20 @@ pub fn run_vm(args: Vec<Edn>) -> Result<Edn, String> {
   }
 }
 
+#[no_mangle]
+/// Executes `run_vm` through Calcit's C-safe buffer protocol v1.
+///
+/// # Safety
+///
+/// `request_ptr` must reference `request_len` readable bytes for this call, and
+/// `output` must point to a writable `CalcitFfiBuffer` slot.
+pub unsafe extern "C" fn run_vm_calcit_ffi_v1(request_ptr: *const u8, request_len: usize, output: *mut CalcitFfiBuffer) -> i32 {
+  // SAFETY: Calcit provides the buffer-v1 request and output slot for this call.
+  unsafe { ffi::run_buffer_adapter(request_ptr, request_len, output, run_vm) }
+}
+
+// The import callback signature is fixed by `calx_vm::CalxImportsDict`.
+#[allow(clippy::result_large_err)]
 fn log_calx_value(xs: Vec<Calx>) -> Result<Calx, CalxError> {
   println!("log: {:?}", xs);
   Ok(Calx::Nil)

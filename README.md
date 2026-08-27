@@ -15,6 +15,10 @@ run-vm $ quote $
 
 Install to `~/.config/calcit/modules/`, compile and provide `*.{dylib,so}` file with `./build.sh`.
 
+The native module uses Calcit's C-safe buffer protocol v1. Cirru EDN is
+serialized across the dynamic-library boundary; Rust `Vec`, `Result`, `String`,
+and trait-object layouts are not part of the ABI.
+
 ### Workflow
 
 https://github.com/calcit-lang/dylib-workflow

@@ -13,7 +13,9 @@
             defn run-vm (code args)
               &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_calx) |run_vm code args
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn
+            {} (:return 'Dynamic)
+              :args $ [] 'CirruQuote 'List
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote
           ns calx.core $ :require
@@ -25,12 +27,16 @@
           :code $ quote
             defn main! () $ run-tests
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn
+            {} (:return 'Unit)
+              :args $ []
         |reload! $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn reload! $
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn
+            {} (:return 'Unit)
+              :args $ []
         |run-tests $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn run-tests () (println "|%%%% test for lib") (println calcit-filename calcit-dirname)
@@ -49,7 +55,9 @@
                     const 3.
                 [] 1 2
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn
+            {} (:return 'Unit)
+              :args $ []
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote
           ns calx.test $ :require
@@ -61,19 +69,27 @@
           :code $ quote
             defmacro get-dylib-ext () $ case-default (&get-os) |.so (:macos |.dylib) (:windows |.dll)
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Macro
+            {}
+              :capabilities $ #{} :platform-read
+              :expansion $ :: 'Expr 'String
+              :required $ []
         |get-dylib-path $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn get-dylib-path (p)
               str (or-current-path calcit-dirname) p $ get-dylib-ext
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn
+            {} (:return 'String)
+              :args $ [] 'String
         |or-current-path $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn or-current-path (p)
               if (blank? p) |. p
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn
+            {} (:return 'String)
+              :args $ [] 'String
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote
           ns calx.util $ :require
