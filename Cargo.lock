@@ -74,18 +74,18 @@ dependencies = [
 
 [[package]]
 name = "calcit_native_ffi"
-version = "0.1.1"
+version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "977684888aab24f6e9fc76a5f6f836c88fb375d86aa3314aa4a7daee83f40f72"
+checksum = "42a8cfaff7caed355a63e9df68c57cea5af1d01b1b37734ed812a4a9ed2faeed"
 dependencies = [
  "cirru_edn",
 ]
 
 [[package]]
 name = "calx_vm"
-version = "0.2.1"
+version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e36bbb07e74a7e6bbbef22bbd652aea0cfaeef4135c2b9c68deb98a1f5f31894"
+checksum = "d8527372668feccc216e09c9341b16e2bb8785aacc7f634a338f62771fe20ccc"
 dependencies = [
  "argh",
  "bincode",
