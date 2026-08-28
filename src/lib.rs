@@ -5,11 +5,7 @@ use std::{collections::HashMap, vec};
 
 use calx_vm::{log_calx_value, parse_function, Calx, CalxFunc, CalxImportsDict, CalxVM};
 
-mod ffi;
-
 calcit_native_ffi::export_buffer_abi_v1!();
-
-use ffi::CalcitFfiBuffer;
 
 fn run_vm(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 2 {
@@ -68,17 +64,7 @@ fn to_calx_cirru(node: &Cirru) -> CalxCirru {
   }
 }
 
-#[no_mangle]
-/// Executes `run_vm` through Calcit's C-safe buffer protocol v1.
-///
-/// # Safety
-///
-/// `request_ptr` must reference `request_len` readable bytes for this call, and
-/// `output` must point to a writable `CalcitFfiBuffer` slot.
-pub unsafe extern "C" fn run_vm_calcit_ffi_v1(request_ptr: *const u8, request_len: usize, output: *mut CalcitFfiBuffer) -> i32 {
-  // SAFETY: Calcit provides the buffer-v1 request and output slot for this call.
-  unsafe { ffi::run_buffer_adapter(request_ptr, request_len, output, run_vm) }
-}
+calcit_native_ffi::export_edn_buffer_method_v1!(run_vm_calcit_ffi_v1, run_vm);
 
 fn calx_to_edn(x: Calx) -> Result<Edn, String> {
   match x {
