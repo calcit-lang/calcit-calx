@@ -13,8 +13,8 @@ crate-type = ["cdylib"] # Exposes only the stable C ABI.
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-calcit_native_ffi = "0.1.1"
+calcit_native_ffi = "0.1.2"
 cirru_edn = "0.8.0"
 cirru_parser = "0.2.15"
 cirru_parser_01 = { package = "cirru_parser", version = "0.1.31" }
-calx_vm = "0.2.1"
+calx_vm = "0.2.2"
