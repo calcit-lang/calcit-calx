@@ -53,6 +53,7 @@
                     local.get $b
                     echo
                     const 3.
+                    return
                 [] 1 2
           :examples $ []
           :schema $ :: 'Fn
