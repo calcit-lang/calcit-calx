@@ -63,7 +63,7 @@ dependencies = [
 
 [[package]]
 name = "calcit_calx"
-version = "0.0.5"
+version = "0.0.6"
 dependencies = [
  "calcit_native_ffi",
  "calx_vm",
