@@ -21,7 +21,7 @@ jobs:
 
       - uses: calcit-lang/setup-calcit@v1.3.0
         with:
-          version: "0.13.53"
+          version: "0.13.57"
           tools: calcit,caps
 
       - uses: dtolnay/rust-toolchain@stable
@@ -29,11 +29,27 @@ jobs:
           toolchain: stable
           components: clippy
 
+      - uses: Swatinem/rust-cache@v2
+
+      - run: cargo fmt --check
+
       - run: cargo test
 
       - run: cargo clippy --all-targets -- -D warnings
 
       - run: cargo build --release
+
+      - name: Verify C-safe exports only
+        run: |
+          exports="$(nm -D --defined-only target/release/libcalcit_calx.so)"
+          grep -q ' calcit_ffi_buffer_free$' <<<"$exports"
+          grep -q ' calcit_ffi_buffer_version$' <<<"$exports"
+          grep -q ' run_vm_calcit_ffi_v1$' <<<"$exports"
+          ! grep -Eq ' (abi_version|edn_version|run_vm)$' <<<"$exports"
+
+      - run: caps --strict --ci
+
+      - run: calcit calcit.cirru --check-only
 
       - run: mkdir -p dylibs/
 

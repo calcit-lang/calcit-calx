@@ -1,10 +1,13 @@
-use cirru_edn::Edn;
+use cirru_edn::{Edn, EdnListView};
 use cirru_parser::Cirru;
+use cirru_parser_01::Cirru as CalxCirru;
 use std::{collections::HashMap, vec};
 
-use calx_vm::{parse_function, Calx, CalxError, CalxFunc, CalxImportsDict, CalxVM};
+use calx_vm::{log_calx_value, parse_function, Calx, CalxFunc, CalxImportsDict, CalxVM};
 
 mod ffi;
+
+calcit_native_ffi::export_buffer_abi_v1!();
 
 use ffi::CalcitFfiBuffer;
 
@@ -16,19 +19,21 @@ fn run_vm(args: Vec<Edn>) -> Result<Edn, String> {
       for x in xs {
         if let Cirru::List(ys) = x {
           // println!("parse fn: {:?}", ys);
-          let f = parse_function(ys)?;
+          let calx_nodes: Vec<CalxCirru> = ys.iter().map(to_calx_cirru).collect();
+          let f = parse_function(&calx_nodes)?;
           fns.push(f);
         } else {
           return Err("run-vm expected top-level expressions".to_owned());
         }
       }
       let mut imports: CalxImportsDict = HashMap::new();
-      imports.insert(String::from("log"), (log_calx_value, 1));
-      imports.insert(String::from("log2"), (log_calx_value, 2));
-      imports.insert(String::from("log3"), (log_calx_value, 3));
+      imports.insert("log".into(), (log_calx_value, 1));
+      imports.insert("log2".into(), (log_calx_value, 2));
+      imports.insert("log3".into(), (log_calx_value, 3));
 
       let mut vm = CalxVM::new(fns, vec![], imports);
-      vm.preprocess()?;
+      vm.preprocess(false)?;
+      vm.setup_top_frame()?;
 
       let params = if let Edn::List(params) = &args[1] {
         let mut ys = vec![];
@@ -56,6 +61,13 @@ fn run_vm(args: Vec<Edn>) -> Result<Edn, String> {
   }
 }
 
+fn to_calx_cirru(node: &Cirru) -> CalxCirru {
+  match node {
+    Cirru::Leaf(value) => CalxCirru::Leaf(value.clone()),
+    Cirru::List(xs) => CalxCirru::List(xs.iter().map(to_calx_cirru).collect()),
+  }
+}
+
 #[no_mangle]
 /// Executes `run_vm` through Calcit's C-safe buffer protocol v1.
 ///
@@ -68,26 +80,19 @@ pub unsafe extern "C" fn run_vm_calcit_ffi_v1(request_ptr: *const u8, request_le
   unsafe { ffi::run_buffer_adapter(request_ptr, request_len, output, run_vm) }
 }
 
-// The import callback signature is fixed by `calx_vm::CalxImportsDict`.
-#[allow(clippy::result_large_err)]
-fn log_calx_value(xs: Vec<Calx>) -> Result<Calx, CalxError> {
-  println!("log: {:?}", xs);
-  Ok(Calx::Nil)
-}
-
 fn calx_to_edn(x: Calx) -> Result<Edn, String> {
   match x {
     Calx::Bool(b) => Ok(Edn::Bool(b)),
     Calx::F64(f) => Ok(Edn::Number(f)),
     Calx::I64(i) => Ok(Edn::Number(i as f64)),
     Calx::Nil => Ok(Edn::Nil),
-    Calx::Str(s) => Ok(Edn::str(s)),
+    Calx::Str(s) => Ok(Edn::str(s.to_string())),
     Calx::List(xs) => {
       let mut ys = vec![];
       for xi in xs {
         ys.push(calx_to_edn(xi)?);
       }
-      Ok(Edn::List(ys))
+      Ok(Edn::List(EdnListView(ys)))
     }
   }
 }
@@ -97,8 +102,8 @@ fn edn_to_calx(x: Edn) -> Result<Calx, String> {
     Edn::Bool(b) => Ok(Calx::Bool(b)),
     Edn::Number(f) => Ok(Calx::F64(f)),
     Edn::Nil => Ok(Calx::Nil),
-    Edn::Str(s) => Ok(Calx::Str(s.into())),
-    Edn::List(xs) => {
+    Edn::Str(s) => Ok(Calx::Str(s.to_string().into())),
+    Edn::List(EdnListView(xs)) => {
       let mut ys = vec![];
       for xi in xs {
         ys.push(edn_to_calx(xi)?);
