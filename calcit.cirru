@@ -6,9 +6,9 @@
       :modules $ []
       :type-slots $ {}
   :files $ {}
-    |calx.core $ %{} 'FileEntry
+    'calx.core $ %{} 'FileEntry
       :defs $ {}
-        |run-vm $ %{} 'CodeEntry (:doc |)
+        'run-vm $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn run-vm (code args)
               &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_calx) |run_vm code args
@@ -21,23 +21,23 @@
           ns calx.core $ :require
             calx.$meta :refer $ calcit-dirname
             calx.util :refer $ get-dylib-path
-    |calx.test $ %{} 'FileEntry
+    'calx.test $ %{} 'FileEntry
       :defs $ {}
-        |main! $ %{} 'CodeEntry (:doc |)
+        'main! $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn main! () $ run-tests
           :examples $ []
           :schema $ :: 'Fn
             {} (:return 'Unit)
               :args $ []
-        |reload! $ %{} 'CodeEntry (:doc |)
+        'reload! $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn reload! $
           :examples $ []
           :schema $ :: 'Fn
             {} (:return 'Unit)
               :args $ []
-        |run-tests $ %{} 'CodeEntry (:doc |)
+        'run-tests $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn run-tests () (println "|%%%% test for lib") (println calcit-filename calcit-dirname)
               println $ run-vm
@@ -64,9 +64,9 @@
           ns calx.test $ :require
             calx.core :refer $ run-vm
             calx.$meta :refer $ calcit-dirname calcit-filename
-    |calx.util $ %{} 'FileEntry
+    'calx.util $ %{} 'FileEntry
       :defs $ {}
-        |get-dylib-ext $ %{} 'CodeEntry (:doc |)
+        'get-dylib-ext $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defmacro get-dylib-ext () $ case-default (&get-os) |.so (:macos |.dylib) (:windows |.dll)
           :examples $ []
@@ -75,7 +75,7 @@
               :capabilities $ #{} :platform-read
               :expansion $ :: 'Expr 'String
               :required $ []
-        |get-dylib-path $ %{} 'CodeEntry (:doc |)
+        'get-dylib-path $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn get-dylib-path (p)
               str (or-current-path calcit-dirname) p $ get-dylib-ext
@@ -83,7 +83,7 @@
           :schema $ :: 'Fn
             {} (:return 'String)
               :args $ [] 'String
-        |or-current-path $ %{} 'CodeEntry (:doc |)
+        'or-current-path $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn or-current-path (p)
               if (blank? p) |. p
