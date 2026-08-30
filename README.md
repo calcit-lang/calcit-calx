@@ -36,6 +36,10 @@ nominal-version bridge never crosses the dylib boundary.
 API 仍使用 `cirru_parser 0.1`。绑定只在 quote 入口进行一次结构等价的 owned
 AST 转换；该 nominal-version bridge 不会跨越 dylib 边界。
 
+See [Calx VM execution boundary](docs/calx-vm-boundary.md) for quoted-program
+input, EDN value conversion, synchronous execution, and trust boundaries. The
+page is indexed by `calcit docs read/search`.
+
 ### Workflow
 
 https://github.com/calcit-lang/dylib-workflow
